@@ -138,4 +138,12 @@ class CGoodcodeIBlockHelper{
         }
         return $surroundIDs;
 	}
+	function isIblockElements($IBLOCK_ID){
+    	CModule::IncludeModule("iblock"); // turn on iblock module
+		// Getting elements from  IBlock
+		CModule::IncludeModule("iblock");
+		$obj_iblock = CIBlockElement::GetList(false, array("IBLOCK_ID"=>$IBLOCK_ID, "ACTIVE" => "Y"), false, false, false);
+		$isElement = boolval($obj_iblock->GetNext()); // is there an element?
+		return $isElement;
+	}
 } ?>
