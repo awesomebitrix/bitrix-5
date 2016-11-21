@@ -2,8 +2,11 @@
 class CGoodcodeIBlockHelper{
 
     function codeIdSwitcher($params){
+	/* 	The function convert ID to CODE and vice versa
+	*	
+	*/
     // CGoodcodeIBlockHelper::codeIdSwitcher(array("IBLOCK_CODEorID", 'SECTION_CODEorID', 'ELEMENT_CODEorID'));
-    	CModule::IncludeModule("iblock"); // turn on iblock module
+    	CModule::IncludeModule("iblock"); // turn on the iblock module
     	// Getting ID of the current article
     	if ($params["ELEMENT_CODE"] || $params["ELEMENT_ID"]){
         	$dbElement = CIBlockElement::GetList(
@@ -12,7 +15,8 @@ class CGoodcodeIBlockHelper{
         	        "IBLOCK_ID"=>$params["IBLOCK_ID"],
         	        "IBLOCK_CODE"=>$params["IBLOCK_CODE"],
         	        "CODE"=>$params["ELEMENT_CODE"],
-        	        "ID"=>$params["ELEMENT_ID"]
+        	        "ID"=>$params["ELEMENT_ID"],
+					"SITE_ID" => SITE_ID
                 ),
         	    false,
         	    false,
@@ -32,7 +36,8 @@ class CGoodcodeIBlockHelper{
         	        "IBLOCK_ID"=>$params["IBLOCK_ID"],
         	        "IBLOCK_CODE"=>$params["IBLOCK_CODE"],
         	        "CODE"=>$params["SECTION_CODE"],
-        	        "ID"=>$params["SECTION_ID"]
+        	        "ID"=>$params["SECTION_ID"],
+					"SITE_ID" => SITE_ID
                 ),
         	    false,
         	    false,
@@ -49,7 +54,8 @@ class CGoodcodeIBlockHelper{
         	    false, // ordering
         	    array( // filtering
         	        "CODE"=>$params["IBLOCK_CODE"],
-        	        "ID"=>$params["IBLOCK_ID"]
+        	        "ID"=>$params["IBLOCK_ID"],
+					"SITE_ID" => SITE_ID
                 )
             );
             $thisElement = $dbElement->GetNext();
@@ -62,7 +68,8 @@ class CGoodcodeIBlockHelper{
     }
 
     function getElementProps($arProps , $ar_OBTAINED_PROPS){
-    // function returns properties of the element by it's Code
+    // function returns properties of the element by it's Code or ID
+	// CGoodcodeIBlockHelper::getElementProps(array("IBLOCK_ID", "ELEMENT_ID"))
         $arRecProps = array();
         CModule::IncludeModule("iblock"); // turn on iblock module
         // convert CODE to ID
@@ -86,9 +93,10 @@ class CGoodcodeIBlockHelper{
     }
 
     function getSectionProps($arProps , $ar_OBTAINED_PROPS){
-    // function returns properties of the element by it's Code
-        if ($arProps["ELEMENT_CODE"]){
-            $arProps["ELEMENT_ID"] = CGoodcodeIBlockHelper::codeIdSwitcher(array("IBLOCK_ID"=>$arProps["IBLOCK_ID"], "ELEMENT_CODE"=>$arProps["ELEMENT_CODE"]));
+    // function returns properties of the section by it's Code or ID
+	// CGoodcodeIBlockHelper::getSectionProps(array("IBLOCK_ID", "SECTION_ID"))
+        if ($arProps["SECTION_CODE"]){
+            $arProps["SECTION_ID"] = CGoodcodeIBlockHelper::codeIdSwitcher(array("IBLOCK_ID"=>$arProps["IBLOCK_ID"], "SECTION_CODE"=>$arProps["ELEMENT_CODE"]));
         }
         $dbRecProps =CIBlockSection::GetList(
                                         array("SORT"=>"DESC"),
@@ -108,12 +116,13 @@ class CGoodcodeIBlockHelper{
     function getSurroundElementsID($arProperties){
     // Get IDs of surround elements
     // CGoodcodeIBlockHelper::getSurroundElementsID(array("IBLOCK_ID", "ELEMENT_CODE", "SORT", "SORT_ORDER"));
-    /*    if (!$arProperties["SORT"] || !$arProperties["SORT_ORDER"]){
+	// Check the sorting
+	if (!$arProperties["SORT"] || !$arProperties["SORT_ORDER"]){
             $arProperties["SORT"] = "ACTIVE_FROM";
             $arProperties["SORT_ORDER"] = "DESC";
-        } */
-        CModule::IncludeModule("iblock"); // turn on iblock module
-    	// Getting ID of the current article
+        }
+        CModule::IncludeModule("iblock"); // turn on the iblock module
+    	// Get the ID of the current article
     	$dbNewsArticle = CIBlockElement::GetList(false, array("CODE"=>$arProperties["ELEMENT_CODE"], "IBLOCK_ID"=>$arProperties["IBLOCK_ID"]), false, false, array("ID"));
         $thisArticle = $dbNewsArticle->GetNext();
 		// Listing Previous, Current and Next articles
@@ -129,23 +138,6 @@ class CGoodcodeIBlockHelper{
         while($paginationItem = $dbPagination->GetNext()){
             $surroundIDs["ID"][] = $paginationItem["ID"];
         }
-        //print_r ($surroundIDs);die;
         return $surroundIDs;
 	}
-}
-
-class CGoodcodeHelper {
-
-    function conjugator($count, $word, $arEndings){
-    // Conjugates words
-        if ($count == 1){
-            $word = $word.$arEndings[0];
-        } elseif ($count < 5){
-            $word = $word.$arEndings[1];
-        } else {
-            $word = $word.$arEndings[2];
-        }
-        return $word;
-	}
-}
-?>
+} ?>
