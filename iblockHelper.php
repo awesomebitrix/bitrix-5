@@ -1,9 +1,8 @@
 <?php
 class CGoodcodeIBlockHelper{
-
-    function codeIdSwitcher($params){
+	function codeIdSwitcher($params){
 	// The function convert ID to CODE and vice versa
-    // CGoodcodeIBlockHelper::codeIdSwitcher(array("IBLOCK_CODEorID", 'SECTION_CODEorID', 'ELEMENT_CODEorID'));
+	// CGoodcodeIBlockHelper::codeIdSwitcher(array("IBLOCK_CODEorID", 'SECTION_CODEorID', 'ELEMENT_CODEorID'));
     	CModule::IncludeModule("iblock"); // turn on the iblock module
     	// Getting ID of the current article
     	if ($params["ELEMENT_CODE"] || $params["ELEMENT_ID"]){
@@ -139,7 +138,7 @@ class CGoodcodeIBlockHelper{
         return $surroundIDs;
 	}
 	function isIblockElements($IBLOCK_ID){
-    	CModule::IncludeModule("iblock"); // turn on iblock module
+		CModule::IncludeModule("iblock"); // turn on iblock module
 		// Getting elements from  IBlock
 		CModule::IncludeModule("iblock");
 		$obj_iblock = CIBlockElement::GetList(false, array("IBLOCK_ID"=>$IBLOCK_ID, "ACTIVE" => "Y"), false, false, false);
