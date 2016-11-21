@@ -2,9 +2,7 @@
 class CGoodcodeIBlockHelper{
 
     function codeIdSwitcher($params){
-	/* 	The function convert ID to CODE and vice versa
-	*	
-	*/
+	// The function convert ID to CODE and vice versa
     // CGoodcodeIBlockHelper::codeIdSwitcher(array("IBLOCK_CODEorID", 'SECTION_CODEorID', 'ELEMENT_CODEorID'));
     	CModule::IncludeModule("iblock"); // turn on the iblock module
     	// Getting ID of the current article
@@ -48,7 +46,7 @@ class CGoodcodeIBlockHelper{
                 return $thisElement["ID"];
             } else {
                 return $thisElement["CODE"];
-            }
+            }	
         } else {
             $dbElement = CIBlock::GetList(
         	    false, // ordering
